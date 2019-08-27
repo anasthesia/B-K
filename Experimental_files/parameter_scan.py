@@ -10,10 +10,10 @@ import sys
 #reads m and tau from input file, runs root macro to get BR and writes (m, tau, BRexp) to a file 
 inputfile=sys.argv[1]
 params = genfromtxt(inputfile,  comments="#", delimiter='\t')
-print(params)
+#print(params)
 
 outputfile=re.sub(".dat","_exp.dat",re.sub("\A([\S]+)/",'output/',inputfile))
-print("output: "+outputfile)
+print("output_exp: "+outputfile)
 
 with open(outputfile,'w') as fout:
     fout.write("#m [GeV]  tau [ps] BRexp(B+->K+mumu)\n")
@@ -29,6 +29,7 @@ expparams=genfromtxt(outputfile,  comments="#", delimiter='\t')
 
 combooutput=re.sub(".dat","_comb.dat",re.sub("\A([\S]+)/",'output_combined/',inputfile))
 with open(combooutput,'w') as foutcomb:
+print("output_comb: "+combooutput)
     allparams=[]
     foutcomb.write("#m [GeV]  alpha  tau [ps] BRtheo(B+->K+mumu) BRexp allowed/excluded(1/0)\n")
     
