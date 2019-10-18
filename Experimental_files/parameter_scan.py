@@ -5,10 +5,12 @@ from numpy import genfromtxt
 import subprocess
 import sys
 
-#run python file-with-masses&taus. Output stored in the output folder
+#run python file-with-masses&taus br. Output stored in the output_combined_BR folder
 
 #reads m and tau from input file, runs root macro to get BR and writes (m, tau, BRexp) to a file 
 inputfile=sys.argv[1]
+br=sys.argv[2]
+Rfactor=sys.argv[3]
 params = genfromtxt(inputfile,  comments="#", delimiter='\t')
 #print(params)
 
@@ -27,15 +29,15 @@ for i in range(params.shape[0]):
 
 expparams=genfromtxt(outputfile,  comments="#", delimiter='\t') 
 
-combooutput=re.sub(".dat","_comb.dat",re.sub("\A([\S]+)/",'output_combined/',inputfile))
+combooutput=re.sub(".dat","_comb.dat",re.sub("\A([\S]+)/",'output_combined_BR_{0}_R{1}/'.format(br,Rfactor),inputfile))
 with open(combooutput,'w') as foutcomb:
-print("output_comb: "+combooutput)
+    print("output_comb: "+combooutput)
     allparams=[]
     foutcomb.write("#m [GeV]  alpha  tau [ps] BRtheo(B+->K+mumu) BRexp allowed/excluded(1/0)\n")
     
     for i in range(params.shape[0]):
         ifallowed=0
-        if (float(params[i,3])<float(expparams[i,2])):
+        if (float(params[i,3])<float(expparams[i,2])/float(Rfactor)):
             ifallowed=1
         newparams=np.append(params[i],[expparams[i,2],ifallowed])
         allparams.append(newparams)
